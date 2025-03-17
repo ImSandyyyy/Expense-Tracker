@@ -1,4 +1,5 @@
 const $ = (selector) => document.querySelector(selector);
+
 const budgetInput = $('#budget-input');
 const budgetBtn = $('#addBudget-btn');
 const totalBudget = $('#total-budget');
@@ -9,6 +10,8 @@ const expenseAmount = $('#expensePrice');
 const expenseBtn = $('#addExpense-btn');
 const list = $('#item-list');
 
+let currentBudget = parseInt(getLocalStorage("budget") ?? '0');
+
 budgetBtn.addEventListener('click', () => {
     let budgetValue = Number(budgetInput.value);
 
@@ -16,9 +19,11 @@ budgetBtn.addEventListener('click', () => {
         alert("give a valid budget amount");
         return;
     }
+
     totalBudget.textContent = `₹${budgetValue}`;
     budget.hidden = false;
-    localStorage.setItem("budget", budgetValue);
+    setLocalStorage("budget", budgetValue);
+    currentBudget = budgetValue;
 })
 
 expenseBtn.addEventListener('click', () => {
@@ -30,23 +35,22 @@ expenseBtn.addEventListener('click', () => {
         return;
     }
 
-    let currentBudget = Number(localStorage.getItem("budget"));
     if (expAmount > currentBudget) {
         alert(`Insufficient budget! You need ₹${expAmount - currentBudget} more.`);
         return;
     }
 
     const items = document.createElement('li');
-    items.textContent = `${expName} :  ₹${expAmount}`;
+    items.textContent = `${expName} : ₹${expAmount}`;
 
     const delBtn = document.createElement('button');
-    delBtn.textContent = 'Delete'
+    delBtn.textContent = 'Delete';
 
     delBtn.addEventListener('click', () => {
-        items.remove();  
-        currentBudget += expAmount;  
-        calculateExpense.textContent = `₹${currentBudget}`;  
-        localStorage.setItem("budget", currentBudget);  
+        items.remove();
+        currentBudget += expAmount;
+        calculateExpense.textContent = `₹${currentBudget}`;
+        setLocalStorage("budget", currentBudget);
     });
 
     items.appendChild(delBtn)
@@ -54,7 +58,8 @@ expenseBtn.addEventListener('click', () => {
 
     currentBudget -= expAmount;
     calculateExpense.textContent = `₹${currentBudget}`;
-    resetExpense()
+    resetExpense();
+    setLocalStorage("budget", currentBudget);
 })
 
 function resetExpense() {
@@ -62,4 +67,10 @@ function resetExpense() {
     expenseAmount.value = "";
 }
 
+function getLocalStorage(key) {
+    return localStorage.getItem(key);
+}
 
+function setLocalStorage(key, value) {
+    localStorage.setItem(key, value);
+}
