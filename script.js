@@ -10,7 +10,13 @@ const expenseAmount = $('#expensePrice');
 const expenseBtn = $('#addExpense-btn');
 const list = $('#item-list');
 
+let expenses = JSON.parse(getLocalStorage("expenses") ?? '[]');
 let currentBudget = parseInt(getLocalStorage("budget") ?? '0');
+
+// Update UI on load
+totalBudget.textContent = `₹${currentBudget}`;
+calculateExpense.textContent = `₹${currentBudget - expenses.reduce((acc, obj) => acc + obj.expAmount, 0)}`;
+expenses.forEach(({ expName, expAmount }) => addItem(expName, expAmount));
 
 budgetBtn.addEventListener('click', () => {
     let budgetValue = Number(budgetInput.value);
@@ -21,6 +27,7 @@ budgetBtn.addEventListener('click', () => {
     }
 
     totalBudget.textContent = `₹${budgetValue}`;
+    calculateExpense.textContent = `₹${budgetValue - expenses.reduce((acc, obj) => acc + obj.expAmount, 0)}`;
     budget.hidden = false;
     setLocalStorage("budget", budgetValue);
     currentBudget = budgetValue;
@@ -40,6 +47,17 @@ expenseBtn.addEventListener('click', () => {
         return;
     }
 
+    expenses.push({ expName, expAmount });
+    setLocalStorage("expenses", JSON.stringify(expenses));
+
+    addItem(expName, expAmount);
+    currentBudget -= expAmount;
+    calculateExpense.textContent = `₹${currentBudget}`;
+    resetExpense();
+    setLocalStorage("budget", currentBudget);
+});
+
+function addItem(expName, expAmount) {
     const items = document.createElement('li');
     items.textContent = `${expName} : ₹${expAmount}`;
 
@@ -47,6 +65,11 @@ expenseBtn.addEventListener('click', () => {
     delBtn.textContent = 'Delete';
 
     delBtn.addEventListener('click', () => {
+        const expenseKey = items.textContent.split(': ₹')[0].trim();
+        expenses = expenses.filter((item) => item.expName !== expenseKey);
+
+        setLocalStorage("expenses", JSON.stringify(expenses));
+
         items.remove();
         currentBudget += expAmount;
         calculateExpense.textContent = `₹${currentBudget}`;
@@ -55,12 +78,7 @@ expenseBtn.addEventListener('click', () => {
 
     items.appendChild(delBtn)
     list.appendChild(items);
-
-    currentBudget -= expAmount;
-    calculateExpense.textContent = `₹${currentBudget}`;
-    resetExpense();
-    setLocalStorage("budget", currentBudget);
-})
+}
 
 function resetExpense() {
     expenseName.value = "";
