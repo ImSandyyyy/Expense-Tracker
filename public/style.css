@@ -1,3 +1,27 @@
+:root {
+    --bg-color: #f4f4f4;
+    --text-color: #333;
+    --card-bg: white;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --button-bg: #28a745;
+    --button-hover: #218838;
+    --list-bg: #ffeb3b;
+    --theme-switch-bg: #4D4D4D ;
+}
+
+.dark-mode {
+    --bg-color: #0d0f1a; 
+    --text-color: #e0e0e0; 
+    --card-bg: #181b2c;
+    --card-border: #2a2f4e; 
+    --shadow-color: rgba(0, 0, 0, 0.6); 
+    --button-bg: #007bff; 
+    --button-hover: #0056b3; 
+    --list-bg: #666666;
+    --list-text: #fff;
+    --theme-switch-bg:  #FFF5EE; 
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -6,22 +30,23 @@
 }
 
 body {
-    background-color: #f4f4f4;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     text-align: center;
     padding: 20px;
 }
 
 h1 {
-    color: #333;
+    color: var(--text-color);
     margin-bottom: 20px;
 }
 
 .amount-input, .expenses {
-    background: white;
+    background: var(--card-bg);
     padding: 20px;
     margin: 10px auto;
     border-radius: 10px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 6px var(--shadow-color);
     width: 300px;
 }
 
@@ -31,12 +56,14 @@ input {
     margin: 10px 0;
     border: 1px solid #ddd;
     border-radius: 5px;
+    background: var(--card-bg);
+    color: var(--text-color);
 }
 
 button {
     padding: 10px 15px;
     border: none;
-    background: #28a745;
+    background: var(--button-bg);
     color: white;
     font-weight: bold;
     cursor: pointer;
@@ -45,7 +72,7 @@ button {
 }
 
 button:hover {
-    background: #218838;
+    background: var(--button-hover);
 }
 
 .budget {
@@ -61,21 +88,50 @@ ul {
 }
 
 li {
-    background: #ffeb3b;
+    background: var(--list-bg);
     padding: 10px;
     margin: 5px 0;
     border-radius: 5px;
     font-weight: bold;
 }
-/* For Chrome, Safari, Edge, and Opera */
+
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
 
-/* For Firefox */
 input[type="number"] {
     -moz-appearance: textfield;
 }
 
+#theme-switch {
+    height: 50px;
+    width: 50px;
+    padding: 0;
+    border-radius: 50%;
+    background-color: var(--theme-switch-bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+}
+
+#theme-switch svg {
+    background-color: var(--theme-switch-bg);
+}
+
+#theme-switch svg:last-child {
+    display: none;
+}
+
+.dark-mode #theme-switch svg:first-child {
+    display: none;
+}
+
+.dark-mode #theme-switch svg:last-child {
+    display: block;
+}
