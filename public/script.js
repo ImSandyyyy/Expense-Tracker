@@ -9,6 +9,8 @@ const expenseName = $('#expenseName');
 const expenseAmount = $('#expensePrice');
 const expenseBtn = $('#addExpense-btn');
 const list = $('#item-list');
+const clearBtn = $('#clear-btn');
+const themeSwitch = $('#theme-switch');
 
 let expenses = JSON.parse(getLocalStorage("expenses") ?? '[]');
 let currentBudget = parseInt(getLocalStorage("budget") ?? '0');
@@ -37,7 +39,7 @@ expenseBtn.addEventListener('click', () => {
     let expName = expenseName.value;
     let expAmount = Number(expenseAmount.value);
 
-    if (expName.trim() == "" || expAmount <= 0) {
+    if (expName.trim() == "" || expAmount <= 0) { 
         alert('Please enter a valid expense name and amount.');
         return;
     }
@@ -79,6 +81,11 @@ function addItem(expName, expAmount) {
     items.appendChild(delBtn)
     list.appendChild(items);
 }
+clearBtn.addEventListener('click', ()=>{
+    localStorage.clear();
+    alert('All data has been cleared!')
+    location.reload();
+})
 
 function resetExpense() {
     expenseName.value = "";
@@ -92,3 +99,20 @@ function getLocalStorage(key) {
 function setLocalStorage(key, value) {
     localStorage.setItem(key, value);
 }
+
+
+function loadTheme() {
+    const isDarkMode = localStorage.getItem('dark-mode') === 'enabled';
+    document.body.classList.toggle('dark-mode', isDarkMode);
+    themeSwitch.setAttribute("aria-label", isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode");
+}
+
+themeSwitch.addEventListener('click', () => {
+    const isDark = document.body.classList.toggle('dark-mode');
+    localStorage.setItem('dark-mode', isDark ? 'enabled' : 'disabled');
+    themeSwitch.setAttribute("aria-label", isDark ? "Switch to Light Mode" : "Switch to Dark Mode");
+});
+
+loadTheme()
+
+
